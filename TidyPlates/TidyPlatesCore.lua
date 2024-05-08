@@ -1123,7 +1123,13 @@ end
 do
 	-- Helper Functions
 	local function SetObjectShape(object, width, height) object:SetWidth(width); object:SetHeight(height) end
-	local function SetObjectJustify(object, horz, vert) object:SetJustifyH(horz); object:SetJustifyV(vert) end
+	local function SetObjectJustify(object, horz, vert)
+        object:SetJustifyH(horz);
+        if vert == "CENTER" then
+            vert = "MIDDLE"
+        end
+        object:SetJustifyV(vert)
+    end
 	local function SetObjectAnchor(object, anchor, anchorTo, x, y) object:ClearAllPoints();object:SetPoint(anchor, anchorTo, anchor, x, y) end
 	local function SetObjectTexture(object, texture) object:SetTexture(texture) end
 	local function SetObjectBartexture(obj, tex, ori, crop) obj:SetStatusBarTexture(tex); obj:SetOrientation(ori); end
@@ -1149,7 +1155,7 @@ do
 	local function SetFontGroupObject(object, objectstyle)
 		if objectstyle then
 			SetObjectFont(object, objectstyle.typeface, objectstyle.size, objectstyle.flags)
-			SetObjectJustify(object, objectstyle.align or "CENTER", objectstyle.vertical or "BOTTOM")
+			SetObjectJustify(object, objectstyle.align or "MIDDLE", objectstyle.vertical or "BOTTOM")
 			SetObjectShadow(object, objectstyle.shadow)
 		end
 	end
