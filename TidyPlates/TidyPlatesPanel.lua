@@ -450,8 +450,8 @@ local function BuildInterfacePanel(panel)
 	ResetButton:SetText("Reset Configuration")
 
 	-- Update Functions
-	panel.okay = OnOkay
-	panel.refresh = OnRefresh
+	panel.OnCommit = OnOkay
+	panel.OnRefresh = OnRefresh
 	panel.ActiveThemeDropdown.OnValueChanged = OnValueChange
 
 	panel.FirstSpecDropdown.OnValueChanged = OnValueChange
@@ -459,12 +459,12 @@ local function BuildInterfacePanel(panel)
 	panel.ThirdSpecDropdown.OnValueChanged = OnValueChange
 	panel.FourthSpecDropdown.OnValueChanged = OnValueChange
 
+	-- Reset Button
+	ResetButton:SetScript("OnClick", function()
+		SetCVar("nameplateShowEnemies", 1)
+		SetCVar("threatWarning", 3)		-- Required for threat/aggro detection
 
 
-	-- Blizzard Nameplate Options Button
-	BlizzOptionsButton:SetScript("OnClick", function()
-		InterfaceOptionsFrame_OpenToCategory(_G["InterfaceOptionsNamesPanel"])
-	end)
 		if IsShiftKeyDown() then
 			TidyPlatesOptions = wipe(TidyPlatesOptions)
 			for i, v in pairs(TidyPlatesOptionsDefaults) do TidyPlatesOptions[i] = v end
