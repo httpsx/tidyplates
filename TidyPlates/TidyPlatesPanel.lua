@@ -432,16 +432,10 @@ local function BuildInterfacePanel(panel)
 	----------------------------------------------
 	-- Other Options
 	----------------------------------------------
-	-- Blizz Button
-	local BlizzOptionsButton = CreateFrame("Button", "TidyPlatesOptions_BlizzOptionsButton", panel, "TidyPlatesPanelButtonTemplate")
-	--BlizzOptionsButton:SetPoint("TOPRIGHT", ResetButton, "TOPLEFT", -8, 0)
-	BlizzOptionsButton:SetPoint("TOPLEFT", panel.AutoShowEnemy, "TOPLEFT", 16, -55)
-	BlizzOptionsButton:SetWidth(260)
-	BlizzOptionsButton:SetText("Nameplate Motion & Visibility")
 
 	-- Cast Bars
 	panel.DisableCastBars = PanelHelpers:CreateCheckButton("TidyPlatesOptions_DisableCastBars", panel, "Disable Cast Bars")
-	panel.DisableCastBars:SetPoint("TOPLEFT", BlizzOptionsButton, "TOPLEFT", 0, -35)
+	panel.DisableCastBars:SetPoint("TOPLEFT", panel.AutoShowEnemy, "TOPLEFT", 16, -55)
 	panel.DisableCastBars:SetScript("OnClick", function(self) SetCastBars(not self:GetChecked()) end)
 
 	-- ForceBlizzardFont
@@ -471,13 +465,6 @@ local function BuildInterfacePanel(panel)
 	BlizzOptionsButton:SetScript("OnClick", function()
 		InterfaceOptionsFrame_OpenToCategory(_G["InterfaceOptionsNamesPanel"])
 	end)
-
-	-- Reset Button
-	ResetButton:SetScript("OnClick", function()
-		SetCVar("nameplateShowEnemies", 1)
-		SetCVar("threatWarning", 3)		-- Required for threat/aggro detection
-
-
 		if IsShiftKeyDown() then
 			TidyPlatesOptions = wipe(TidyPlatesOptions)
 			for i, v in pairs(TidyPlatesOptionsDefaults) do TidyPlatesOptions[i] = v end
