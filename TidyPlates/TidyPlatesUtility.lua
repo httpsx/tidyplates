@@ -821,14 +821,3 @@ do
 	TidyPlatesUtility.CallIn = CallIn
 
 end
-
-
-
---------------------------------------------------------------------------------------------------
--- InterfaceOptionsFrame_OpenToCategory
--- Quick and dirty fix
---------------------------------------------------------------------------------------------------
-
-function TidyPlatesUtility.OpenInterfacePanel(panel)
-    Settings.OpenToCategory(panel.name)
-end

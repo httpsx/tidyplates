@@ -711,10 +711,6 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
 		panel:Hide()
 	end
 
-        local function OpenTidyPlatesConfig()
-            InterfaceOptionsFrame_OpenToCategory("Tidy Plates")
-        end
-
         local RefreshPanel = function(self)
             SetPanelValues(panel, GetVariableSet(panel))
             EnableUnlink(UnlinkButton)
@@ -733,7 +729,7 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
                 panel.Warnings.Text:SetFont(font, 18)
 
                 WarningFixButton:SetText("Change Theme...")
-                WarningFixButton:SetScript("OnClick", OpenTidyPlatesConfig)
+                WarningFixButton:SetScript("OnClick", function() Settings.OpenToCategory("Tidy Plates") end)
             end
 
             --[[

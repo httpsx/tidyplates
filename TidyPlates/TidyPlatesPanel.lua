@@ -568,7 +568,7 @@ function slash_TidyPlates(arg)
 		TidyPlatesSlashCommands[arg]()
 		TidyPlates:ForceUpdate()
 	else
-		TidyPlatesUtility.OpenInterfacePanel(TidyPlatesInterfacePanel)
+        Settings.OpenToCategory(TidyPlatesInterfacePanel.name)
 	end
 end
 
