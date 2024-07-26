@@ -758,7 +758,15 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
         panel:SetScript("OnShow", RefreshPanel)
 	UnlinkButton:SetScript("OnClick", UnLinkPanel)
 
-	InterfaceOptions_AddCategory(panel)
+	panel:Hide()
+
+	if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(panel)
+    	elseif Settings and Settings.RegisterAddOnCategory and Settings.RegisterCanvasLayoutSubcategory then
+		local category = Settings.RegisterCanvasLayoutSubcategory(TidyPlatesInterfacePanel.category, panel, panel.name, panel.name)
+		category.ID = panel.name;
+		Settings.RegisterAddOnCategory(category);
+	end
 	----------------
 	-- Return a pointer to the whole thingy
 	----------------

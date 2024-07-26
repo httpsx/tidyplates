@@ -11,8 +11,14 @@ local version = GetAddOnMetadata("TidyPlates", "version")
 local versionString = "|cFF666666"..version
 
 local TidyPlatesInterfacePanel = PanelHelpers:CreatePanelFrame("TidyPlatesInterfacePanel", "Tidy Plates", nil)
-InterfaceOptions_AddCategory(TidyPlatesInterfacePanel);
-
+if InterfaceOptions_AddCategory then
+    InterfaceOptions_AddCategory(TidyPlatesInterfacePanel)
+elseif Settings and Settings.RegisterAddOnCategory and Settings.RegisterCanvasLayoutCategory then
+    local category = Settings.RegisterCanvasLayoutCategory(TidyPlatesInterfacePanel, TidyPlatesInterfacePanel.name, TidyPlatesInterfacePanel.name)
+    category.ID = TidyPlatesInterfacePanel.name;
+    TidyPlatesInterfacePanel.category = category
+    Settings.RegisterAddOnCategory(category);
+end
 local CallIn = TidyPlatesUtility.CallIn
 local copytable = TidyPlatesUtility.copyTable
 local PanelHelpers = TidyPlatesUtility.PanelHelpers
