@@ -753,20 +753,15 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
 	-----------------
 	-- Button Handlers
 	-----------------
-	panel.okay = ClosePanel --function() OnPanelItemChange(panel) end
-	panel.refresh = RefreshPanel
-        panel:SetScript("OnShow", RefreshPanel)
+	panel.OnCommit = ClosePanel --function() OnPanelItemChange(panel) end
+	panel.OnRefresh = RefreshPanel
+    panel:SetScript("OnShow", RefreshPanel)
 	UnlinkButton:SetScript("OnClick", UnLinkPanel)
 
 	panel:Hide()
 
-	if InterfaceOptions_AddCategory then
-		InterfaceOptions_AddCategory(panel)
-    	elseif Settings and Settings.RegisterAddOnCategory and Settings.RegisterCanvasLayoutSubcategory then
-		local category = Settings.RegisterCanvasLayoutSubcategory(TidyPlatesInterfacePanel.category, panel, panel.name, panel.name)
-		category.ID = panel.name;
-		Settings.RegisterAddOnCategory(category);
-	end
+    local category = Settings.RegisterCanvasLayoutSubcategory(TidyPlatesInterfacePanel.category, panel, panel.name, panel.name)
+    category.ID = panel.name;
 	----------------
 	-- Return a pointer to the whole thingy
 	----------------
