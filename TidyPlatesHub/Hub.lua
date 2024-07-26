@@ -503,30 +503,16 @@ end
 
 
 -- Create Instances of Panels
-local TankPanel = CreateHubInterfacePanel( "HubPanelSettingsTank", "|cFF3782D1Tank Profile", "Tidy Plates" )
-TidyPlatesPanel:AddProfile("Tank")
-BuildHubPanel(TankPanel)
-function ShowTidyPlatesHubTankPanel() TidyPlatesUtility.OpenInterfacePanel(TankPanel) end
+local function CreateProfilePanel(profile, color)
+    local panel = CreateHubInterfacePanel("HubPanelSettings" .. profile, color .. profile .. "Profile", "Tidy Plates")
+    TidyPlatesPanel:AddProfile(profile)
+    BuildHubPanel(panel)
+end
 
-
-local DamagePanel = CreateHubInterfacePanel( "HubPanelSettingsDamage", "|cFFFF1100Damage Profile", "Tidy Plates" )
-TidyPlatesPanel:AddProfile("Damage")
-BuildHubPanel(DamagePanel)
-function ShowTidyPlatesHubDamagePanel() TidyPlatesUtility.OpenInterfacePanel(DamagePanel) end
-
-
-
-local HealerPanel = CreateHubInterfacePanel( "HubPanelSettingsHealer", "|cFF44DD55Healer Profile", "Tidy Plates"  )
-TidyPlatesPanel:AddProfile("Healer")
-BuildHubPanel(HealerPanel)
-function ShowTidyPlatesHubHealerPanel() TidyPlatesUtility.OpenInterfacePanel(HealerPanel) end
-
-
-local GladiatorPanel = CreateHubInterfacePanel( "HubPanelSettingsGladiator", "|cFFAA6600Gladiator Profile", "Tidy Plates"  )
-TidyPlatesPanel:AddProfile("Gladiator")
-BuildHubPanel(GladiatorPanel)
-function ShowTidyPlatesHubGladiatorPanel() TidyPlatesUtility.OpenInterfacePanel(GladiatorPanel) end
-
+CreateProfilePanel("Tank", "|cFF3782D1")
+CreateProfilePanel("Damage", "|cFFFF1100")
+CreateProfilePanel("Healer", "|cFF44DD55")
+CreateProfilePanel("Gladiator", "|cFFAA6600")
 
 
 ---------------------------------------------
@@ -535,59 +521,12 @@ function ShowTidyPlatesHubGladiatorPanel() TidyPlatesUtility.OpenInterfacePanel(
 
 function ShowTidyPlatesHubPanel()
 	local profile = TidyPlates.GetProfile()
-
-	if profile == "Tank" then
-		ShowTidyPlatesHubTankPanel()
-	elseif profile == "Healer" then
-		ShowTidyPlatesHubHealerPanel()
-	elseif profile == "Gladiator" then
-		ShowTidyPlatesHubGladiatorPanel()
-	else
-		ShowTidyPlatesHubDamagePanel()
-	end
-
-end
-
-local function SlashCommandHub()
-	--local profile = GetProfile()
-	ShowTidyPlatesHubPanel()
+    Settings.OpenToCategory("HubPanelSettings"..(profile == "None" and "Damage" or profile))
 end
 
 
 SLASH_HUB1 = '/hub'
-SlashCmdList['HUB'] = SlashCommandHub
-
-
---[[
-	local ColorPanel = CreateInterfacePanel( "HubPanelSettingsColors", "Tidy Plates Hub: Colors", nil )
-	ColorPanel.RefreshSettings = function() end
-	InterfaceOptions_AddCategory(ColorPanel)
---]]
---end
-
---local HubHandler = CreateFrame("Frame", nil, nil)
---HubHandler:SetScript("OnEvent", OnLogin)
---HubHandler:RegisterEvent("PLAYER_LOGIN")
-
-
-
-
-
---[[
-local GladiatorPanel = CreateInterfacePanel( "HubPanelSettingsGladiator", "Tidy Plates Hub: |cFFAA6600Gladiator", nil )
-BuildHubPanel(GladiatorPanel)
-function ShowTidyPlatesHubGladiatorPanel() InterfaceOptionsFrame_OpenToCategory(GladiatorPanel) end
---]]
---[[
-
--- Testing
-
-/run print(HubDamageConfigFrame:GetParent())
-/run HubDamageConfigFrame:SetParent(UIParent); HubDamageConfigFrame:SetPoint("TOPLEFT")
-
-HubDamageConfigFrame = DamagePanel
-
---]]
+SlashCmdList['HUB'] = ShowTidyPlatesHubPanel
 
 
 StaticPopupDialogs["TIDYPLATESHUB_RESETCHECK"] = {
@@ -608,10 +547,3 @@ StaticPopupDialogs["TIDYPLATESHUB_RESETCHECK"] = {
   hideOnEscape = true,
   preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
 }
-
---StaticPopup_Show ("TIDYPLATESHUB_RESETCHECK")
---StaticPopup_Hide ("EXAMPLE_HELLOWORLD")
-
-
-
-
