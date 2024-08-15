@@ -21,6 +21,7 @@ local RaidIconColors = {
 	["SKULL"] = {r = 244/255, g = 242/255, b = 240/255,},
 }
 
+local White = {r = 1, g = 1, b = 1}
 local BossGrey = {r = 251/255, g = 240/255, b = 85/255,}
 local NormalGrey = {r = 251/255, g = 240/255, b = 85/255,}
 local EliteColor  = {r = 251/255, g = 240/255, b = 85/255,}
@@ -49,7 +50,7 @@ local AddHubFunction = TidyPlatesHubHelpers.AddHubFunction
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 local tempColor = {}
-local function DummyFunction() return end
+local function DummyFunction(...) end
 
 -- By Low Health
 local function ColorFunctionByHealth(unit)
@@ -61,11 +62,6 @@ end
 
 HubData.Functions.ColorFunctionByHealth = ColorFunctionByHealth
 
-
-
-local function ColorFunctionBlack()
-	return Black
-end
 
 --[[
 unit.threatValue
@@ -277,13 +273,6 @@ end
 -- Warning Border Color
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-local WarningColor = {}
-
--- Player Health (na)
-local function WarningBorderFunctionByPlayerHealth(unit)
-	local healthPct = UnitHealth("player")/UnitHealthMax("player")
-	if healthPct < .3 then return DarkRed end
-end
 
 -- By Enemy Healer
 local function WarningBorderFunctionByEnemyHealer(unit)
@@ -292,24 +281,6 @@ local function WarningBorderFunctionByEnemyHealer(unit)
 
 		if IsHealer(unit.rawName) then
 			return RaidClassColors[unit.class or ""] or ReactionColors[unit.reaction][unit.type]
-		end
-	end
-end
-
--- "By Threat (High) Damage"
-local function WarningBorderFunctionByThreatDamage(unit)
-	if InCombatLockdown and unit.reaction ~= "FRIENDLY" and unit.type == "NPC" then
-		if unit.threatValue > 0 then
-			return ColorFunctionDamage(unit)
-		end
-	end
-end
-
--- "By Threat (Low) Tank"
-local function WarningBorderFunctionByThreatTank(unit)
-	if InCombatLockdown() and unit.reaction ~= "FRIENDLY" and unit.type == "NPC" then
-		if unit.threatValue < 3 then
-			if IsOffTanked(unit) then return else	return ColorFunctionRawTank(unit) end
 		end
 	end
 end
@@ -395,8 +366,8 @@ local function NameColorBySignificance(unit)
 	-- [[
 
 	if unit.reaction ~= "FRIENDLY" then
-		if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then 
-			return White
+		if (unit.isTarget or (LocalVars.FocusAsTarget and unit.isFocus)) then
+			return Enum.Color.White
 		elseif unit.isBoss or unit.isMarked then 
 			return BossGrey
 		elseif unit.isElite or (unit.levelcolorRed > .9 and unit.levelcolorGreen < .9) then 

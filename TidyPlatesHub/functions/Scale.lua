@@ -14,7 +14,7 @@ local IsTankingAuraActive = TidyPlatesWidgets.IsPlayerTank
 local IsHealer = TidyPlatesUtility.IsHealer
 local UnitFilter = TidyPlatesHubFunctions.UnitFilter
 local IsAuraShown = TidyPlatesWidgets.IsAuraShown
-local function DummyFunction() end
+local function DummyFunction(...) end
 
 ------------------------------------------------------------------------------
 -- Scale

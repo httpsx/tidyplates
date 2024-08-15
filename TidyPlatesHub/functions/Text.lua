@@ -28,7 +28,7 @@ local GetUnitQuestInfo = TidyPlatesUtility.GetUnitQuestInfo
 
 local AddHubFunction = TidyPlatesHubHelpers.AddHubFunction
 
-local function DummyFunction() end
+local function DummyFunction(...) end
 
 -- Colors
 local White = {r = 1, g = 1, b = 1}
@@ -326,7 +326,7 @@ AddHubFunction(HealthTextModeFunctions, TidyPlatesHubMenus.TextModes, HealthFunc
 local function HealthTextDelegate(unit)
 
 	local func
-	local mode = 1
+	local mode = "HealthFunctionNone"
 	local showText = not (LocalVars.TextShowOnlyOnTargets or LocalVars.TextShowOnlyOnActive)
 
 	if unit.reaction == "FRIENDLY" then mode = LocalVars.FriendlyStatusTextMode

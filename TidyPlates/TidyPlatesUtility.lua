@@ -110,7 +110,8 @@ TidyPlatesUtility.updateTable = updatetable
 -- GameTooltipScanner
 ------------------------------------------
 local ScannerName = "TidyPlatesScanningTooltip"
-local TooltipScanner = CreateFrame( "GameTooltip", ScannerName , nil, "GameTooltipTemplate")
+---@class GameTooltip
+local TooltipScanner = CreateFrame("GameTooltip", ScannerName , nil, "GameTooltipTemplate") --[[@as any]]
 TooltipScanner.name = ScannerName
 TooltipScanner:SetOwner(WorldFrame, "ANCHOR_NONE")
 
@@ -165,6 +166,7 @@ TidyPlatesUtility.GetUnitSubtitle = GetUnitSubtitle
 local playerName = UnitName("player")
 TooltipScanner.currLine = 3
 TooltipScanner.ClearLinesOld = TooltipScanner.ClearLines
+---@diagnostic disable-next-line: duplicate-set-field
 function TooltipScanner:ClearLines()
     self.currLine = 3
     self:ClearLinesOld()
@@ -238,90 +240,73 @@ end
 -- Threat Function
 ------------------------
 
--- /run print(UnitThreatSituation("party1"), UnitAffectingCombat("party1"))
---local function GetThreatCondition(name)
-local function GetFriendlyThreat(unitid)
-
-	if unitid then
-		local isUnitInParty = UnitPlayerOrPetInParty(unit)
-		local isUnitInRaid = UnitInRaid(unit)
-		local isUnitPet = (unit == "pet")
-
-		--if isUnitInParty then
-			local unitaggro = UnitThreatSituation(unitid)
-			if unitaggro and unitaggro > 1 then return true end
-		--end
-	end
+---@param unit UnitToken?
+---@return boolean
+function TidyPlatesUtility.GetFriendlyThreat(unit)
+    return unit and (UnitThreatSituation(unit) or 0) > 1 or false
 end
 
-TidyPlatesUtility.GetFriendlyThreat = GetFriendlyThreat
 
-------------------------
--- Threat Function
-------------------------
+---@param enemyUnitid UnitToken a target/enemy
+---@return number?, UnitToken?
+function TidyPlatesUtility.GetRelativeThreat(enemyUnitid)
+    if not UnitExists(enemyUnitid) then return end
 
-do
+    local allyUnitid, allyThreat = nil, 0
+    local playerIsTanking, playerSituation, playerThreat = UnitDetailedThreatSituation("player", enemyUnitid)
+    if not playerThreat then return end
 
-	local function GetRelativeThreat(enemyUnitid)		-- 'enemyUnitid' is a target/enemy
-		if not UnitExists(enemyUnitid) then return end
+    -- Get Group Type
+    local evalUnitid, evalIndex, evalThreat
+    local groupType, size, startAt = nil, nil, 1
+    local groupSize = GetNumGroupMembers() --[[@as integer]]
+    if UnitInRaid("player") then
+        groupType = "raid"
+        startAt = 2
+    elseif UnitInParty("player") then
+        groupType = "party"
+    else
+        groupType = nil
+    end
 
-		local allyUnitid, allyThreat = nil, 0
-		local playerIsTanking, playerSituation, playerThreat = UnitDetailedThreatSituation("player", enemyUnitid)
-		if not playerThreat then return end
+    -- Cycle through Group, picking highest threat holder
+    if groupType then
+        for allyIndex = startAt, groupSize do
+            evalUnitid = groupType..allyIndex
+            evalThreat = select(3, UnitDetailedThreatSituation(evalUnitid, enemyUnitid))
+            if evalThreat and evalThreat > allyThreat then
+                allyThreat = evalThreat
+                allyUnitid = evalUnitid
+            end
+        end
+    end
 
-		-- Get Group Type
-		local evalUnitid, evalIndex, evalThreat
-		local groupType, size, startAt = nil, nil, 1
-		if UnitInRaid("player") then
-			groupType = "raid"
-			groupSize = TidyPlatesUtility:GetNumRaidMembers()
-			startAt = 2
-		elseif UnitInParty("player") then
-			groupType = "party"
-			groupSize = TidyPlatesUtility:GetNumPartyMembers()
-		else groupType = nil end
+    -- Request Pet Threat (if possible)
+    if HasPetUI() and UnitExists("pet") then
+        evalThreat = select(3, UnitDetailedThreatSituation("pet", enemyUnitid)) or 0
+        if evalThreat > allyThreat then
+            allyThreat = evalThreat
+            allyUnitid = "pet"
+        end
+    end
 
-		-- Cycle through Group, picking highest threat holder
-		if groupType then
-			for allyIndex = startAt, groupSize do
-				evalUnitid = groupType..allyIndex
-				evalThreat = select(3, UnitDetailedThreatSituation(evalUnitid, enemyUnitid))
-				if evalThreat and evalThreat > allyThreat then
-					allyThreat = evalThreat
-					allyUnitid = evalUnitid
-				end
-			end
-		end
-
-		-- Request Pet Threat (if possible)
-		if HasPetUI() and UnitExists("pet") then
-			evalThreat = select(3, UnitDetailedThreatSituation("pet", enemyUnitid)) or 0
-			if evalThreat > allyThreat then
-				allyThreat = evalThreat
-				allyUnitid = "pet"
-			end
-		end
-
-		--[[
-		if playerIsTanking and allyThreat then
-			return 100 - tonumber(allyThreat or 0), true
-		elseif allyThreat and allyUnitid then
-			return 100 - playerThreat, false
-		end
-		--]]
-		-- [[
-		-- Return the appropriate value
-		if playerThreat and allyThreat and allyUnitid then
-			if playerThreat >= 100 then 	-- The enemy is attacking you. You are tanking. 	Returns: 1. Your threat, plus your lead over the next highest person, 2. Your Unitid (since you're tanking)
-				return tonumber(playerThreat + (100-allyThreat)), "player"
-			else 	-- The enemy is not attacking you.  Returns: 1. Your scaled threat percent, 2. Who is On Top
-				return tonumber(playerThreat), allyUnitid
-			end
-		end
-		--]]
-	end
-
-	TidyPlatesUtility.GetRelativeThreat = GetRelativeThreat
+    --[[
+    if playerIsTanking and allyThreat then
+        return 100 - tonumber(allyThreat or 0), true
+    elseif allyThreat and allyUnitid then
+        return 100 - playerThreat, false
+    end
+    --]]
+    -- [[
+    -- Return the appropriate value
+    if playerThreat and allyThreat and allyUnitid then
+        if playerThreat >= 100 then 	-- The enemy is attacking you. You are tanking. 	Returns: 1. Your threat, plus your lead over the next highest person, 2. Your Unitid (since you're tanking)
+            return playerThreat + (100-allyThreat), "player"
+        else 	-- The enemy is not attacking you.  Returns: 1. Your scaled threat percent, 2. Who is On Top
+            return playerThreat, allyUnitid
+        end
+    end
+    --]]
 end
 ------------------------------------------------------------------
 -- Panel Helpers (Used to create interface panels)

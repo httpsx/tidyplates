@@ -744,8 +744,7 @@ do
 	-- UpdateIndicator_CustomAlpha: Calls the alpha delegate to get the requested alpha
 	function UpdateIndicator_CustomAlpha(event)
 		if activetheme.SetAlpha then
-			--local previousAlpha = extended.requestedAlpha
-			extended.requestedAlpha = activetheme.SetAlpha(unit) or previousAlpha or unit.alpha or 1
+			extended.requestedAlpha = activetheme.SetAlpha(unit) or unit.alpha or 1
 		else
 			extended.requestedAlpha = unit.alpha or 1
 		end
@@ -1307,16 +1306,3 @@ function TidyPlates:RequestUpdate(plate) if plate then SetUpdateMe(plate) else S
 
 function TidyPlates:ActivateTheme(theme) if theme and type(theme) == 'table' then TidyPlates.ActiveThemeTable, activetheme = theme, theme; ResetPlates = true; end end
 function TidyPlates.OverrideFonts( enable) OverrideFonts = enable; end
-
--- Old and needing deleting - Just here to avoid errors
-function TidyPlates:EnableFadeIn() EnableFadeIn = true; end
-function TidyPlates:DisableFadeIn() EnableFadeIn = nil; end
-TidyPlates.RequestWidgetUpdate = TidyPlates.RequestUpdate
-TidyPlates.RequestDelegateUpdate = TidyPlates.RequestUpdate
-
-
-
-
-
-
-

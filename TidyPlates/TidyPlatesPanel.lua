@@ -327,7 +327,7 @@ local function BuildInterfacePanel(panel)
 	panel.ThemeCategoryTitle:SetTextColor(255/255, 105/255, 6/255)
 
 	-- Dropdown
-	panel.ActiveThemeDropdown = PanelHelpers:CreateDropdownFrame("TidyPlatesChooserDropdown", panel, ThemeDropdownMenuItems, TidyPlatesDefaultThemeName, nil, true)
+	panel.ActiveThemeDropdown = PanelHelpers:CreateDropdownFrame("TidyPlatesChooserDropdown", panel, ThemeDropdownMenuItems, "           ", nil, true)
 	panel.ActiveThemeDropdown:SetPoint("TOPLEFT", panel.ThemeCategoryTitle, "BOTTOMLEFT", -20, -4)
 
 	----------------------------------------------

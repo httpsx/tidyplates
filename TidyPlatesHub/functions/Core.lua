@@ -81,7 +81,6 @@ local PaleBlue = {r = 0, g = 130/255, b = 225/255,}
 local PaleBlueText = {r = 194/255, g = 253/255, b = 1,}
 local DarkRed = {r = .9, g = 0.08, b = .08,}
 
-local RaidClassColors = RAID_CLASS_COLORS
 
 ------------------------------------------------------------------------------------
 
@@ -236,12 +235,8 @@ local function ApplyProfileSettings(theme, ...)
 	ApplyFontCustomization(theme["NameOnly"], theme["NameOnlyBackup"])
 
 	TidyPlates:ForceUpdate()
-	RaidClassColors = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 end
 
-
--- From Neon.lua...
-local LocalVars = TidyPlatesHubDamageVariables
 
 local function OnInitialize(plate, theme)
 	if theme and theme.WidgetConfig then
@@ -284,7 +279,6 @@ local function ApplyHubFunctions(theme)
 	theme.SetCastbarColor = TidyPlatesHubFunctions.SetCastbarColor
 	theme.OnUpdate = TidyPlatesHubFunctions.OnUpdate
 	theme.OnContextUpdate = TidyPlatesHubFunctions.OnContextUpdate
-	theme.ShowConfigPanel = ShowTidyPlatesHubDamagePanel
 	theme.SetStyle = TidyPlatesHubFunctions.SetStyleBinary
 	theme.SetCustomText = TidyPlatesHubFunctions.SetCustomTextBinary
 	theme.OnInitialize = OnInitialize		-- Need to provide widget positions
@@ -296,14 +290,6 @@ local function ApplyHubFunctions(theme)
 	theme["DefaultBackup"] = CopyTable(theme["Default"])
 	theme["NameOnlyBackup"] = CopyTable(theme["NameOnly"])
 
-	if barStyle then
-		backupStyle.threatborder.default_width = barStyle.threatborder.width
-		backupStyle.healthborder.default_width = barStyle.healthborder.width
-		backupStyle.target.default_width = barStyle.target.width
-		backupStyle.healthbar.default_width = barStyle.healthbar.width
-		backupStyle.eliteicon.default_x = barStyle.eliteicon.x
-	end
-
 	return theme
 end
 
@@ -311,54 +297,6 @@ end
 -- Function List
 ---------------------------------------------
 TidyPlatesHubFunctions.IsOffTanked = IsOffTanked
-TidyPlatesHubFunctions.UseDamageVariables = UseDamageVariables
-TidyPlatesHubFunctions.UseTankVariables = UseTankVariables
 TidyPlatesHubFunctions.UseVariables = UseVariables
 TidyPlatesHubFunctions.EnableWatchers = EnableWatchers
 TidyPlatesHubFunctions.ApplyHubFunctions = ApplyHubFunctions
-
-
-
----------------------------------------------
--- Old, will be removed
----------------------------------------------
---[[
-local function UseDamageVariables()
-	local objectName = "HubPanelSettingsDamage"
-	LocalVars = TidyPlatesHubSettings[objectName] or CreateVariableSet(objectName)
-
-	CallbackUpdate()
-
-	--EnableWatchers()
-	return LocalVars
-end
-
-local function UseTankVariables()
-	local objectName = "HubPanelSettingsTank"
-	LocalVars = TidyPlatesHubSettings[objectName] or CreateVariableSet(objectName)
-
-	CallbackUpdate()
-
-	--EnableWatchers()
-	return LocalVars
-end
-
-
-
-TidyPlatesHubFunctions.UseDamageVariables = UseDamageVariables
-TidyPlatesHubFunctions.UseTankVariables = UseTankVariables
-
---]]
-
-
-
-
-
-
-
-
-
-
-
-
-

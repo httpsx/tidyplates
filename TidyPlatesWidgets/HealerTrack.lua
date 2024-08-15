@@ -212,7 +212,7 @@ local function UpdateRolesViaScoreboard()
 				end
 			end
 		end
-		if UpdateIsNeeded then TidyPlates:RequestDelegateUpdate() end
+		if UpdateIsNeeded then TidyPlates:RequestUpdate() end
 	end
 
 end
@@ -316,7 +316,7 @@ function Events.COMBAT_LOG_EVENT_UNFILTERED()
 				local rawName = strsplit("-", sourceName)				-- Strip server name
 				if RoleList[rawName] ~= "Healer" then
 					RoleList[rawName] = "Healer"
-					TidyPlates:RequestDelegateUpdate()
+					TidyPlates:RequestUpdate()
 				end
 			end
 		end

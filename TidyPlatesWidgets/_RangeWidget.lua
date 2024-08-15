@@ -20,7 +20,7 @@ local function GetRange(unitid)
 	local estRange = nil
 	if UnitInRange(unitid) then estRange = 40 end
 	if CheckInteractDistance(unitid, 4) then estRange = 28
-		if IsItemInRange(6450, unitid) == 1 then estRange = 15
+		if C_Item.IsItemInRange(6450, unitid) == 1 then estRange = 15
 			if CheckInteractDistance(unitid, 2) then estRange = 9 end end
 	end
 	return estRange

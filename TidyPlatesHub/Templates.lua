@@ -1,9 +1,8 @@
-local font = TidyPlatesHubLocalizedFont or "Interface\\Addons\\TidyPlates\\Media\\DefaultFont.ttf"
+local font = "Interface\\Addons\\TidyPlates\\Media\\DefaultFont.ttf"
 local divider = "Interface\\Addons\\TidyPlatesHub\\shared\\ThinBlackLine"
 
 local PanelHelpers = TidyPlatesUtility.PanelHelpers 		-- PanelTools
-local DropdownFrame = CreateFrame("Frame", "TidyPlatesHubCategoryFrame", UIParent, "UIDropDownMenuTemplate")
-local L = TidyPlatesHub_GetLocalizedString
+
 
 -- Menu Templates
 TidyPlatesHubMenus = TidyPlatesHubMenus or {}
@@ -667,7 +666,6 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
 
 	-- The Unlink feature will pop the config panel onto its own movable window frame
 	UnLinkPanel = function (self)
-		HideUIPanel(InterfaceOptionsFrame)		-- ShowUIPanel(InterfaceOptionsFrame);
 		local height, width = panel:GetHeight(), panel:GetWidth()
 		panel:SetParent(UIParent)
 		panel:ClearAllPoints()
@@ -713,7 +711,7 @@ local function CreateInterfacePanel(objectName, panelTitle, parentFrameName)
 
         local RefreshPanel = function(self)
             SetPanelValues(panel, GetVariableSet(panel))
-            EnableUnlink(UnlinkButton)
+            EnableUnlink()
 
             local activeTheme = TidyPlates:GetTheme()
 

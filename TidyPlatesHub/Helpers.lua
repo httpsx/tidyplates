@@ -98,7 +98,7 @@ local function ConvertDebuffListTable(source, target, order)
 
 			if prefix then
 				if TidyPlatesHubPrefixList[prefix] then
-					item = suffix
+					item = suffix or ""
 					-- CONVERT
 					target[item] = TidyPlatesHubPrefixList[prefix]
 				else -- If no prefix is listed, assume 1

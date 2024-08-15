@@ -29,8 +29,7 @@ local SetCooldown = CooldownNative.SetCooldown
 --* ---------------------------------------------------------------
 
 local function CreateAura(unit, index, filter, unitReaction)
-    local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
-    if not aura then aura = {} end
+    local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, filter) or {}
     return {
         name = aura.name,
         texture = aura.icon,
@@ -47,7 +46,7 @@ local function CreateAura(unit, index, filter, unitReaction)
         castByPlayer = aura.isFromPlayerOrPlayerPet,
         showAll = aura.nameplateShowAll,
         timeMod = aura.timeMod,
-        reaction = unitReaction or (UnitIsFriend("player", unitid)
+        reaction = unitReaction or (UnitIsFriend("player", unit)
                                     and AURA_TARGET_FRIENDLY
                                     or AURA_TARGET_HOSTILE),
         effect = filter,
@@ -245,7 +244,6 @@ function AuraWidget.Create(parent)
 	-- Functions
 
 	frame.Filter = nil
-	frame.UpdateTarget = UpdateWidgetTarget
 	return frame
 end
 
@@ -438,7 +436,7 @@ function TidyPlatesWidgets.EnableAuraWatcher()
 	for event in pairs(AuraEvents) do AuraMonitor:RegisterEvent(event) end
 end
 
-function TidyPlatesWidgets.DisableAuraWatcher()
+function TidyPlatesWidgets:DisableAuraWatcher()
 	AuraMonitor:SetScript("OnEvent", nil)
 	AuraMonitor:UnregisterAllEvents()
 
